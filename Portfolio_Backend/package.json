@@ -1,0 +1,27 @@
+{
+  "name": "portfolio_backend",
+  "version": "1.0.0",
+  "description": "This will serve the backend functionallity for my portfolio.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/github.com/RavenDuffy.git"
+  },
+  "keywords": [
+    "portfolio"
+  ],
+  "author": "Raven Duffy",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/github.com/RavenDuffy/issues"
+  },
+  "homepage": "https://github.com/github.com/RavenDuffy#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "nodemon": "^1.19.3",
+    "tedious": "^6.4.0"
+  }
+}
