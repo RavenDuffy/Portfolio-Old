@@ -1,5 +1,5 @@
 const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(75,
+let camera = new THREE.PerspectiveCamera(75,
   window.innerWidth / window.innerHeight,
   0.1, 1000);
 const renderer = new THREE.WebGLRenderer();
@@ -11,7 +11,11 @@ const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
 const cube = new THREE.Mesh(geometry, material);
 const maxCamDistance = 200;
 scene.add(cube);
+scene.add(camera);
 camera.position.z = maxCamDistance;
+camera.name = "main";
+console.log(camera)
+const originalCam = camera.clone();
 
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2(1, 1);
@@ -71,17 +75,54 @@ const mousemove = (event) => {
 }
 window.addEventListener("mousemove", mousemove, false);
 
+const mouseclick = (event) => {
+  console.log(4)
+  mouseOverList = raycaster.intersectObjects(scene.children)
+  if (mouseOverList.length) {
+    if (mouseOverList[0].object == cube) {
+      console.log(mouseOverList[0].object)
+      console.log(scene.children);
+      camera = originalCam;
+      // scene.children = scene.children.filter((item) => {
+      //   //console.log(item == originalCam, item, originalCam)
+      //   return !(item.type == "PerspectiveCamera" && item.name == "main");
+      // });
+      // console.log(scene.children);
+      // scene.add(camera);
+      // scene.add(mouseOverList[0].object)
+      // console.log(camera)
+    }
+    else {
+      // console.log(camera);
+      // camera.children = [];
+      // camera.add(mouseOverList[0].object)
+    }
+  }
+  console.log(camera, scene);
+}
+window.addEventListener("mousedown", mouseclick, false);
+
 const isSquareHovered = () => {
   mouseOverList = raycaster.intersectObjects(scene.children)
-  for (let o of mouseOverList) {
-    if (o.object == cube) zoomObject(o.object);
+  if (mouseOverList.length) {
+    zoomObject(mouseOverList[0]);
     return;
-  }
-  zoomOut();
+  } zoomOut();
 }
 
 const zoomObject = (object) => {
-  if (camera.position.z > 5) camera.position.z -= 1;
+  // if (camera.position.z > 5) camera.position.z -= 1;
+  // console.log(object)
+
+  const vector = new THREE.Vector3(mouse.x, mouse.y, 1);
+  vector.unproject(camera);
+  vector.sub(camera.position);
+  camera.position.addVectors(camera.position, vector.setLength(1));
+
+  // const objectZ = object.point.z;
+  // const cameraToFarEdge = ( objectZ < 0 ) ? -objectZ + camera.position.z : camera.position.z - objectZ;
+  // camera.far = cameraToFarEdge * 3;
+  // camera.updateProjectionMatrix();
 }
 
 const zoomOut = () => {
